@@ -7,16 +7,16 @@ from data.cityscapes_dataset_SSL import cityscapesDataSetSSL
 from data.synthia_dataset import SYNDataSet
 
 IMG_MEAN = np.array((0.0, 0.0, 0.0), dtype=np.float32)
-image_sizes = {'cityscapes': (1024,512), 'gta5': (1280, 720), 'synthia': (1280, 760)}
-cs_size_test = {'cityscapes': (1344,576)}
+image_sizes = {'target': (512,512), 'soruce_images': (720, 720), 'synthia': (1280, 760)}
+cs_size_test = {'target': (512,512)}
 
 def CreateSrcDataLoader(args):
-    if args.source == 'gta5':
-        source_dataset = GTA5DataSet( args.data_dir, args.data_list, crop_size=image_sizes['cityscapes'], 
-                                      resize=image_sizes['gta5'] ,mean=IMG_MEAN,
+    if args.source == 'soruce_images':
+        source_dataset = GTA5DataSet( args.data_dir, args.data_list, crop_size=image_sizes['target'], 
+                                      resize=image_sizes['soruce_images'] ,mean=IMG_MEAN,
                                       max_iters=args.num_steps * args.batch_size )
     elif args.source == 'synthia':
-        source_dataset = SYNDataSet( args.data_dir, args.data_list, crop_size=image_sizes['cityscapes'],
+        source_dataset = SYNDataSet( args.data_dir, args.data_list, crop_size=image_sizes['target'],
                                       resize=image_sizes['synthia'] ,mean=IMG_MEAN,
                                       max_iters=args.num_steps * args.batch_size )
     else:
@@ -33,14 +33,14 @@ def CreateTrgDataLoader(args):
     if args.set == 'train' or args.set == 'trainval':
         target_dataset = cityscapesDataSetLabel( args.data_dir_target, 
                                                  args.data_list_target, 
-                                                 crop_size=image_sizes['cityscapes'], 
+                                                 crop_size=image_sizes['target'], 
                                                  mean=IMG_MEAN, 
                                                  max_iters=args.num_steps * args.batch_size, 
                                                  set=args.set )
     else:
         target_dataset = cityscapesDataSet( args.data_dir_target,
                                             args.data_list_target,
-                                            crop_size=cs_size_test['cityscapes'],
+                                            crop_size=cs_size_test['target'],
                                             mean=IMG_MEAN,
                                             set=args.set )
 
@@ -63,7 +63,7 @@ def CreateTrgDataLoader(args):
 def CreateTrgDataSSLLoader(args):
     target_dataset = cityscapesDataSet( args.data_dir_target, 
                                         args.data_list_target,
-                                        crop_size=image_sizes['cityscapes'],
+                                        crop_size=image_sizes['target'],
                                         mean=IMG_MEAN, 
                                         set=args.set )
     target_dataloader = data.DataLoader( target_dataset, 
@@ -77,7 +77,7 @@ def CreateTrgDataSSLLoader(args):
 def CreatePseudoTrgLoader(args):
     target_dataset = cityscapesDataSetSSL( args.data_dir_target,
                                            args.data_list_target,
-                                           crop_size=image_sizes['cityscapes'],
+                                           crop_size=image_sizes['target'],
                                            mean=IMG_MEAN,
                                            max_iters=args.num_steps * args.batch_size,
                                            set=args.set,
