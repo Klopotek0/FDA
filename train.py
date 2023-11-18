@@ -13,10 +13,9 @@ from torch.autograd import Variable
 from utils import FDA_source_to_target
 import scipy.io as sio
 
-IMG_MEAN = np.array((104.00698793, 116.66876762, 122.67891434), dtype=np.float32)
+IMG_MEAN = np.array((59.11354771,  65.17001789, 46.51190912), dtype=np.float32)#target values
 IMG_MEAN = torch.reshape( torch.from_numpy(IMG_MEAN), (1,3,1,1)  )
-CS_weights = np.array( (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-                        1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0), dtype=np.float32 )
+CS_weights = np.array( (1.0, 1.0), dtype=np.float32 )
 CS_weights = torch.from_numpy(CS_weights)
 
 
