@@ -61,8 +61,8 @@ def main():
         model.adjust_learning_rate(args, optimizer, i)                               # adjust learning rate
         optimizer.zero_grad()                                                        # zero grad
 
-        src_img, src_lbl, _, _ = sourceloader_iter.next()                            # new batch source
-        trg_img, trg_lbl, _, _ = targetloader_iter.next()                            # new batch target
+        src_img, src_lbl, _, _ = next(sourceloader_iter)  #_  .next()                            # new batch source
+        trg_img, trg_lbl, _, _ = next(targetloader_iter)   #.next()                            # new batch target
 
         scr_img_copy = src_img.clone()
 
