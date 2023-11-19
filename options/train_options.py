@@ -55,4 +55,4 @@ class TrainOptions():
         with open(file_name, 'wt') as args_file:
             args_file.write(message)
             args_file.write('\n')    
-
+ 
