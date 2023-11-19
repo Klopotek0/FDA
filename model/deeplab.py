@@ -170,7 +170,7 @@ class ResNet101(nn.Module):
             logP = F.log_softmax(x, dim=1) # [B, 19, H, W]
             PlogP = P * logP               # [B, 19, H, W]
             ent = -1.0 * PlogP.sum(dim=1)  # [B, 1, H, W]
-            ent = ent / 2.9444         # chanage when classes is not 19
+            ent = ent / 0.6931471805599453       # chanage when classes is not 19
             # compute robust entropy
             ent = ent ** 2.0 + 1e-8
             ent = ent ** ita
@@ -247,7 +247,8 @@ def Deeplab(num_classes=21, init_weights=None, restore_from=None, phase='train')
         new_params = model.state_dict().copy()
         for i in saved_state_dict:
             i_parts = i.split('.')
-            if not num_classes == 19 or not i_parts[1] == 'layer5':
+            print(i_parts)
+            if not num_classes == 2 or not i_parts[1] == 'layer5':
                 new_params['.'.join(i_parts[1:])] = saved_state_dict[i]
                 #new_params[i] = saved_state_dict[i]
         model.load_state_dict(new_params)
