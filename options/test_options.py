@@ -11,8 +11,8 @@ class TestOptions():
         parser.add_argument("--num-classes", type=int, default=2, help="Number of classes for cityscapes.")
         parser.add_argument("--set", type=str, default='val', help="choose test set.")
         parser.add_argument("--restore-opt1", type=str, default=None, help="restore model parameters from beta1")
-      #  parser.add_argument("--restore-opt2", type=str, default=None, help="restore model parameters from beta2")  ##FOR ONE MODEL
-       # parser.add_argument("--restore-opt3", type=str, default=None, help="restore model parameters from beta3")    ## FOR ONE MODEL
+      #  parser.add_argument("--restore-opt2", type=str, default=None, help="restore model parameters from beta2")  ##FOR multiple models MODEL
+       # parser.add_argument("--restore-opt3", type=str, default=None, help="restore model parameters from beta3")    ## FOR multiple models MODEL
 
         parser.add_argument("--init-weights", type=str, default=None, help="initial model.")
         parser.add_argument("--restore-from", type=str, default=None, help="restore model parameters from")
