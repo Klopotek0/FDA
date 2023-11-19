@@ -36,50 +36,50 @@ def label_mapping(input, mapping):
         output[ input==mapping[ind][0] ] = mapping[ind][1]
     return np.array(output, dtype=np.int64)
 
-def compute_mIoU( gt_dir, pred_dir, devkit_dir='', restore_from='' ):
-    with open( osp.join(devkit_dir, 'info.json'),'r' ) as fp:
-        info = json.load(fp)
-    num_classes = np.int(info['classes'])
+def compute_mIoU(gt_dir, pred_dir, devkit_dir='', restore_from=''):
+   # with open(os.path.join(devkit_dir, 'info.json'), 'r') as fp:
+    #    info = json.load(fp)
+
+    # Zaktualizuj liczbę klas do 2
+    num_classes = 2
     print('Num classes', num_classes)
 
-    name_classes = np.array(info['label'], dtype=np.str)
-    mapping = np.array( info['label2train'],dtype=np.int )
-    hist = np.zeros( (num_classes, num_classes) )
-
-    image_path_list = osp.join( devkit_dir, 'val.txt')
-    label_path_list = osp.join( devkit_dir, 'label.txt')
+    # Zaktualizuj listy obrazów i etykiet
+    image_path_list = "/content/FDA/dataset/target_list/val.txt"
+    label_path_list ="/content/FDA/dataset/target_list/val.txt"
     gt_imgs = open(label_path_list, 'r').read().splitlines()
-    gt_imgs = [osp.join(gt_dir, x) for x in gt_imgs]
+    gt_imgs = [os.path.join(gt_dir, x) for x in gt_imgs]
     pred_imgs = open(image_path_list, 'r').read().splitlines()
-    pred_imgs = [osp.join(pred_dir, x.split('/')[-1]) for x in pred_imgs]
+    pred_imgs = [os.path.join(pred_dir, x.split('/')[-1]) for x in pred_imgs]
+
+    # Inicjalizacja macierzy historii
+    hist = np.zeros((num_classes, num_classes))
+
     for ind in range(len(gt_imgs)):
-        pred  = np.array(Image.open(pred_imgs[ind]))
+        pred = np.array(Image.open(pred_imgs[ind]))
         label = np.array(Image.open(gt_imgs[ind]))
-        label = label_mapping(label, mapping)
+
+        # Zakładamy, że etykiety są już w odpowiednim formacie (0 lub 1)
         if len(label.flatten()) != len(pred.flatten()):
-            print('Skipping: len(gt) = {:d}, len(pred) = {:d}, {:s}, {:s}'.format( len(label.flatten()), len(pred.flatten()), gt_imgs[ind], pred_imgs[ind] ))
+            print(f'Skipping: len(gt) = {len(label.flatten())}, len(pred) = {len(pred.flatten())}, {gt_imgs[ind]}, {pred_imgs[ind]}')
             continue
+
         hist += fast_hist(label.flatten(), pred.flatten(), num_classes)
         if ind > 0 and ind % 10 == 0:
-            with open(restore_from+'_mIoU.txt', 'a') as f:
-                f.write( '{:d} / {:d}: {:0.2f}\n'.format(ind, len(gt_imgs), 100*np.mean(per_class_iu(hist))) )
-            print('{:d} / {:d}: {:0.2f}'.format(ind, len(gt_imgs), 100*np.mean(per_class_iu(hist))))
-    hist2 = np.zeros((19, 19))
-
-    for i in range(19):
-        hist2[i] = hist[i]/np.sum(hist[i])
+            with open(restore_from + '_mIoU.txt', 'a') as f:
+                f.write(f'{ind} / {len(gt_imgs)}: {100 * np.mean(per_class_iu(hist)):.2f}\n')
+            print(f'{ind} / {len(gt_imgs)}: {100 * np.mean(per_class_iu(hist)):.2f}')
 
     mIoUs = per_class_iu(hist)
     for ind_class in range(num_classes):
-        with open(restore_from+'_mIoU.txt', 'a') as f:
-            f.write('===>'+name_classes[ind_class]+':\t' + str(round(mIoUs[ind_class]*100,2)) + '\n')
-        print('===>'+name_classes[ind_class]+':\t' + str(round(mIoUs[ind_class]*100,2)))
-    with open(restore_from+'_mIoU.txt', 'a') as f:
-        f.write('===> mIoU: ' + str(round(np.nanmean(mIoUs)*100,2)) + '\n')
+        with open(restore_from + '_mIoU.txt', 'a') as f:
+            f.write(f'Class {ind_class}: {mIoUs[ind_class] * 100:.2f}\n')
+        print(f'Class {ind_class}: {mIoUs[ind_class] * 100:.2f}')
 
-    print('===> mIoU19: ' + str(round(   np.nanmean(mIoUs)*100,2   )))
-    print('===> mIoU16: ' + str(round(   np.mean(mIoUs[[0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 15, 17, 18]])*100,2   )))
-    print('===> mIoU13: ' + str(round(   np.mean(mIoUs[[0, 1, 2, 6, 7, 8, 10, 11, 12, 13, 15, 17, 18]])*100,2   )))
+    with open(restore_from + '_mIoU.txt', 'a') as f:
+        f.write(f'mIoU: {np.nanmean(mIoUs) * 100:.2f}\n')
+    print(f'mIoU: {np.nanmean(mIoUs) * 100:.2f}')
+
 
 
 def main():
@@ -151,7 +151,7 @@ def main():
             output_col.save(  '%s/%s_color.png' % (args.save, name.split('.')[0])  ) 
     # scores computed and saved
     # ------------------------------------------------- #
-  #  compute_mIoU( args.gt_dir, args.save, args.devkit_dir, args.restore_from )    
+    compute_mIoU( args.gt_dir, args.save, args.devkit_dir, args.restore_from )    
 
 
 if __name__ == '__main__':
