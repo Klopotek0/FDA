@@ -20,16 +20,14 @@ class GTA5DataSet(data.Dataset):
 
         self.files = []
 
-        self.id_to_trainid = {7: 0, 8: 1, 11: 2, 12: 3, 13: 4, 17: 5,
-                              19: 6, 20: 7, 21: 8, 22: 9, 23: 10, 24: 11, 25: 12,
-                              26: 13, 27: 14, 28: 15, 31: 16, 32: 17, 33: 18}
+        self.id_to_trainid = {0: 0, 1: 1}
     def __len__(self):
         return len(self.img_ids)
 
     def __getitem__(self, index):
         name = self.img_ids[index]
-        image = Image.open(osp.join(self.root, "images/%s" % name)).convert('RGB')
-        label = Image.open(osp.join(self.root, "labels/%s" % name))
+        image = Image.open(osp.join(self.root, "source_images/%s" % name)).convert('RGB')
+        label = Image.open(osp.join(self.root, "source_masks/%s" % name))
         # resize
         image = image.resize(self.resize, Image.BICUBIC)
         label = label.resize(self.resize, Image.NEAREST)
