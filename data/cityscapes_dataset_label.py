@@ -20,18 +20,19 @@ class cityscapesDataSetLabel(data.Dataset):
         self.ignore_label = 255
         self.set = set
 
-        self.id_to_trainid = {7: 0, 8: 1, 11: 2, 12: 3, 13: 4, 17: 5,
-                              19: 6, 20: 7, 21: 8, 22: 9, 23: 10, 24: 11, 25: 12,
-                              26: 13, 27: 14, 28: 15, 31: 16, 32: 17, 33: 18}
+        self.id_to_trainid = {0: 0, 1: 1}
 
     def __len__(self):
         return len(self.img_ids)
 
     def __getitem__(self, index):
         name = self.img_ids[index]   # aachen/aachen_000000_000019_leftImg8bit.png
-        image = Image.open(osp.join(   self.root, "leftImg8bit/%s/%s" % (self.set, name)   )).convert('RGB')
-        lbname = name.replace("leftImg8bit", "gtFine_labelIds")
-        label = Image.open(osp.join(   self.root, "gtFine/%s/%s" % (self.set, lbname)   ))
+        image = Image.open(osp.join(self.root, "target_images/%s" % name)).convert('RGB')
+        label = Image.open(osp.join(self.root, "target_masks/%s" % name))
+
+        #image = Image.open(osp.join(   self.root, "leftImg8bit/%s/%s" % (self.set, name)   )).convert('RGB')
+        #lbname = name.replace("leftImg8bit", "gtFine_labelIds")
+        #label = Image.open(osp.join(   self.root, "gtFine/%s/%s" % (self.set, lbname)   ))
 
         # resize
         image = image.resize( self.crop_size, Image.BICUBIC )
