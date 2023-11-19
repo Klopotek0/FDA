@@ -107,8 +107,10 @@ def main():
 
     targetloader = CreateTrgDataLoader(args)
 
+   # IMG_MEAN = np.array((98.77694003,  74.15956312, 65.00406046), dtype=np.float32)#source values, treningowe
+
     # change the mean for different dataset other than CS
-    IMG_MEAN = np.array((59.11354771,  65.17001789, 46.51190912), dtype=np.float32)#target values
+    IMG_MEAN = np.array((59.11354771,  65.17001789, 46.51190912), dtype=np.float32)#target values, noisyBlurry
     IMG_MEAN = torch.reshape( torch.from_numpy(IMG_MEAN), (1,3,1,1)  )
     mean_img = torch.zeros(1, 1)
 
