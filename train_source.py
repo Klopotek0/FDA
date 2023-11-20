@@ -13,7 +13,7 @@ from torch.autograd import Variable
 from utils import FDA_source_to_target
 import scipy.io as sio
 
-IMG_MEAN = np.array((59.11354771,  65.17001789, 46.51190912), dtype=np.float32)#target values
+IMG_MEAN = np.array((98.77694003,  74.15956312, 65.00406046), dtype=np.float32)#source values
 IMG_MEAN = torch.reshape( torch.from_numpy(IMG_MEAN), (1,3,1,1)  )
 CS_weights = np.array( (1.0, 1.0), dtype=np.float32 )
 CS_weights = torch.from_numpy(CS_weights)
@@ -25,7 +25,7 @@ def main():
     os.environ["CUDA_VISIBLE_DEVICES"] = args.GPU
     _t = {'iter time' : Timer()}
 
-    model_name = args.source + '_to_' + args.target
+    model_name = args.source 
     if not os.path.exists(args.snapshot_dir):
         os.makedirs(args.snapshot_dir)
         os.makedirs(os.path.join(args.snapshot_dir, 'logs'))
@@ -49,10 +49,7 @@ def main():
     # losses to log
     loss = ['loss_seg_src']
     loss_train = 0.0
-    loss_val = 0.0
     loss_train_list = []
-    loss_val_list = []
-
     mean_img = torch.zeros(1, 1)
     class_weights = Variable(CS_weights).cuda()
 
@@ -84,7 +81,6 @@ def main():
         src_img, src_lbl = Variable(src_img).cuda(), Variable(src_lbl.long()).cuda() # to gpu
         src_seg_score = model(src_img, lbl=src_lbl, weight=class_weights, ita=args.ita)      # forward pass
         loss_seg_src = model.loss_seg                                                # get loss
-        loss_ent_src = model.loss_ent
 
 
         loss_all = loss_seg_src    
