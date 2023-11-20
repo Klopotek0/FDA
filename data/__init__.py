@@ -7,8 +7,8 @@ from data.cityscapes_dataset_SSL import cityscapesDataSetSSL
 from data.synthia_dataset import SYNDataSet
 
 IMG_MEAN = np.array((0.0, 0.0, 0.0), dtype=np.float32)
-image_sizes = {'target': (512,512), 'soruce_images': (720, 720), 'synthia': (1280, 760)}
-cs_size_test = {'target': (512,512)}
+image_sizes = {'target': (416,320), 'soruce_images': (416, 320), 'synthia': (1280, 760)}
+cs_size_test = {'target': (416,320)}
 
 def CreateSrcDataLoader(args):
     if args.source == 'soruce_images':
