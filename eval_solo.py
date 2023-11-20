@@ -45,8 +45,8 @@ def compute_mIoU(gt_dir, pred_dir, devkit_dir='', restore_from=''):
     print('Num classes', num_classes)
 
     # Zaktualizuj listy obrazów i etykiet
-    image_path_list = "/content/FDA/dataset/target_list/val.txt"
-    label_path_list ="/content/FDA/dataset/target_list/val.txt"
+    image_path_list = "/content/FDA/dataset/eval_list/gt.txt"
+    label_path_list ="/content/FDA/dataset/eval_list/gt.txt"
     gt_imgs = open(label_path_list, 'r').read().splitlines()
     gt_imgs = [os.path.join(gt_dir, x) for x in gt_imgs]
     pred_imgs = open(image_path_list, 'r').read().splitlines()
@@ -107,10 +107,10 @@ def main():
 
     targetloader = CreateTrgDataLoader(args)
 
-   # IMG_MEAN = np.array((98.77694003,  74.15956312, 65.00406046), dtype=np.float32)#source values, treningowe
+    IMG_MEAN = np.array((98.77694003,  74.15956312, 65.00406046), dtype=np.float32)#source values, treningowe
 
     # change the mean for different dataset other than CS
-    IMG_MEAN = np.array((59.11354771,  65.17001789, 46.51190912), dtype=np.float32)#target values, noisyBlurry
+    #IMG_MEAN = np.array((59.11354771,  65.17001789, 46.51190912), dtype=np.float32)#target values, noisyBlurry
     IMG_MEAN = torch.reshape( torch.from_numpy(IMG_MEAN), (1,3,1,1)  )
     mean_img = torch.zeros(1, 1)
 
