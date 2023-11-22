@@ -36,7 +36,7 @@ def label_mapping(input, mapping):
         output[ input==mapping[ind][0] ] = mapping[ind][1]
     return np.array(output, dtype=np.int64)
 
-def compute_mIoU(gt_dir, pred_dir, devkit_dir='', restore_from=''):
+def compute_mIoU(list_target,gt_dir, pred_dir, devkit_dir='', restore_from=''):
    # with open(os.path.join(devkit_dir, 'info.json'), 'r') as fp:
     #    info = json.load(fp)
 
@@ -45,8 +45,8 @@ def compute_mIoU(gt_dir, pred_dir, devkit_dir='', restore_from=''):
     print('Num classes', num_classes)
 
     # Zaktualizuj listy obrazów i etykiet
-    image_path_list = "/content/FDA/dataset/eval_list/gt.txt"
-    label_path_list ="/content/FDA/dataset/eval_list/gt.txt"
+    image_path_list = list_target
+    label_path_list =list_target
     gt_imgs = open(label_path_list, 'r').read().splitlines()
     gt_imgs = [os.path.join(gt_dir, x) for x in gt_imgs]
     pred_imgs = open(image_path_list, 'r').read().splitlines()
@@ -86,7 +86,6 @@ def main():
     opt = TestOptions()
     args = opt.initialize()
     os.environ["CUDA_VISIBLE_DEVICES"] = args.GPU
-
     if not os.path.exists(args.save):
         os.makedirs(args.save)
 
@@ -153,7 +152,7 @@ def main():
             output_col.save(  '%s/%s_color.png' % (args.save, name.split('.')[0])  ) 
     # scores computed and saved
     # ------------------------------------------------- #
-    compute_mIoU( args.gt_dir, args.save, args.devkit_dir, args.restore_from )    
+    compute_mIoU( args.data_list_target,args.gt_dir, args.save, args.devkit_dir, args.restore_from )    
 
 
 if __name__ == '__main__':
