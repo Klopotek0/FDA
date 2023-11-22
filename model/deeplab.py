@@ -212,13 +212,13 @@ class ResNet101(nn.Module):
 
     def optim_parameters(self, args):
         return [{'params': self.get_1x_lr_params_NOscale(), 'lr': args.learning_rate},
-                {'params': self.get_10x_lr_params(), 'lr': 10 * args.learning_rate}]
+                {'params': self.get_10x_lr_params(), 'lr': 10 * args.learning_rate}]   ######## for source comment *10
 
     def adjust_learning_rate(self, args, optimizer, i):
         lr = args.learning_rate * (  (1-float(i)/args.num_steps) ** (args.power)  )
         optimizer.param_groups[0]['lr'] = lr
         if len(optimizer.param_groups) > 1:
-            optimizer.param_groups[1]['lr'] = lr * 10  
+            optimizer.param_groups[1]['lr'] = lr * 10   ################## for source comment *10
             
     def CrossEntropy2d(self, predict, target, weight=None, size_average=True):
         assert not target.requires_grad
