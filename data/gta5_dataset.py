@@ -33,16 +33,16 @@ class GTA5DataSet(data.Dataset):
         label = label.resize(self.resize, Image.NEAREST)
 
         # (left, upper, right, lower)
-        left = self.resize[0]-self.crop_size[0]
-        upper= self.resize[1]-self.crop_size[1]
+       # left = self.resize[0]-self.crop_size[0]
+       # upper= self.resize[1]-self.crop_size[1]
 
-        left = np.random.randint(0, high=left)
-        upper= np.random.randint(0, high=upper)
-        right= left + self.crop_size[0]
-        lower= upper+ self.crop_size[1]
+        #left = np.random.randint(0, high=left)
+        #upper= np.random.randint(0, high=upper)
+        #right= left + self.crop_size[0]
+        #lower= upper+ self.crop_size[1]
 
-        image = image.crop((left, upper, right, lower))
-        label = label.crop((left, upper, right, lower))
+        #image = image.crop((left, upper, right, lower))
+        #label = label.crop((left, upper, right, lower))
 
         image = np.asarray(image, np.float32)
         label = np.asarray(label, np.float32)
