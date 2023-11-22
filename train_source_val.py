@@ -46,7 +46,7 @@ def main():
         start_iter = int(args.restore_from.rsplit('/', 1)[1].rsplit('_')[1])
 
 
-
+###
     def validate(model, val_loader, class_weights):
         model.eval()  # Ustaw model w tryb walidacji
         total_loss = 0
@@ -61,7 +61,7 @@ def main():
 
         
         return total_loss / len(val_loader)
-
+##
     cudnn.enabled = True
     cudnn.benchmark = True
 
@@ -111,26 +111,27 @@ def main():
         optimizer.step()
 
         loss_train += loss_seg_src.detach().cpu().numpy()
+        
 
         if (i+1) % args.save_pred_every == 0:
             print('taking snapshot ...')
             torch.save( model.state_dict(), os.path.join(args.snapshot_dir, '%s_' % (args.source) + str(i+1) + '.pth') )
             
         if (i+1) % args.print_freq == 0:
+            loss_train /= args.print_freq
             _t['iter time'].toc(average=False)
-            print('[it %d][src seg loss %.4f][lr %.4f][%.2fs]' % \
-                    (i + 1, loss_seg_src.data, optimizer.param_groups[0]['lr']*10000, _t['iter time'].diff) )
+            print('[it %d][train loss %.4f][lr %.4f][%.2fs]' % \
+                    (i + 1, loss_train, optimizer.param_groups[0]['lr']*10000, _t['iter time'].diff) )
 
             sio.savemat(args.tempdata, {'src_img':src_img.cpu().numpy()})
 
-            loss_train /= args.print_freq
             loss_train_list.append(loss_train)
             sio.savemat( args.matname, {'loss_train':loss_train_list} )
             loss_train = 0.0
         if (i+1) % args.validation_freq == 0:  # args.validation_freq to liczba iteracji po której chcesz wykonać walidację
             val_loss = validate(model, val_loader, class_weights)
             print('Validation loss at iteration %d: %.4f' % (i + 1, val_loss))
-
+            model.train()
             if i + 1 > args.num_steps_stop:
                 print('finish training')
                 break
