@@ -25,7 +25,7 @@ def low_freq_mutate_np( amp_src, amp_trg, L=0.1 ):
     a_trg = np.fft.fftshift( amp_trg, axes=(-2, -1) )
 
     _, h, w = a_src.shape
-    b = (  np.floor(np.amin((h,w))*L)  ).astype(int)
+    b = (np.floor(0.5 * np.amin((h, w)) * L)).astype(int)     # get b
     c_h = np.floor(h/2.0).astype(int)
     c_w = np.floor(w/2.0).astype(int)
 
