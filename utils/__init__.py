@@ -7,15 +7,6 @@ def extract_ampl_phase(fft_im):
     fft_pha = torch.angle(fft_im)
     return fft_amp, fft_pha
 
-def low_freq_mutate( amp_src, amp_trg, L=0.1 ):
-    _, _, h, w = amp_src.size()
-    b = (  np.floor(np.amin((h,w))*L)  ).astype(int)     # get b
-    amp_src[:,:,0:b,0:b]     = amp_trg[:,:,0:b,0:b]      # top left
-    amp_src[:,:,0:b,w-b:w]   = amp_trg[:,:,0:b,w-b:w]    # top right
-    amp_src[:,:,h-b:h,0:b]   = amp_trg[:,:,h-b:h,0:b]    # bottom left
-    amp_src[:,:,h-b:h,w-b:w] = amp_trg[:,:,h-b:h,w-b:w]  # bottom right
-    return amp_src
-
 def low_freq_mutate(amp_src, amp_trg, L=0.1):
     _, _, h, w = amp_src.size()
     # multiply w by 2 because we have only half the space as rFFT is used
@@ -28,6 +19,24 @@ def low_freq_mutate(amp_src, amp_trg, L=0.1):
         amp_src[:, :, 0:b, 0:b] = amp_trg[:, :, 0:b, 0:b]      # top left
         amp_src[:, :, h-b+1:h, 0:b] = amp_trg[:, :, h-b+1:h, 0:b]    # bottom left
     return amp_src
+
+def low_freq_mutate_np( amp_src, amp_trg, L=0.1 ):
+    a_src = np.fft.fftshift( amp_src, axes=(-2, -1) )
+    a_trg = np.fft.fftshift( amp_trg, axes=(-2, -1) )
+
+    _, h, w = a_src.shape
+    b = (  np.floor(np.amin((h,w))*L)  ).astype(int)
+    c_h = np.floor(h/2.0).astype(int)
+    c_w = np.floor(w/2.0).astype(int)
+
+    h1 = c_h-b
+    h2 = c_h+b+1
+    w1 = c_w-b
+    w2 = c_w+b+1
+
+    a_src[:,h1:h2,w1:w2] = a_trg[:,h1:h2,w1:w2]
+    a_src = np.fft.ifftshift( a_src, axes=(-2, -1) )
+    return a_src
 
 def FDA_source_to_target(src_img, trg_img, L=0.1):
     # get fft of both source and target
@@ -68,7 +77,7 @@ def FDA_source_to_target_np( src_img, trg_img, L=0.1 ):
     amp_trg, pha_trg = np.abs(fft_trg_np), np.angle(fft_trg_np)
 
     # mutate the amplitude part of source with target
-    amp_src_ = low_freq_mutate( amp_src, amp_trg, L=L )
+    amp_src_ = low_freq_mutate_np( amp_src, amp_trg, L=L )
 
     # mutated fft of source
     fft_src_ = amp_src_ * np.exp( 1j * pha_src )
@@ -78,4 +87,3 @@ def FDA_source_to_target_np( src_img, trg_img, L=0.1 ):
     src_in_trg = np.real(src_in_trg)
 
     return src_in_trg
-
