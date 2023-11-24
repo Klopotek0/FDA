@@ -189,6 +189,12 @@ class ResNet101(nn.Module):
                 x = x.squeeze(1)  # Usuwa wymiar kanału, zmieniając rozmiar z [B, 1, H, W] na [B, H, W]
                 lbl=lbl.float()
                 self.loss_seg = self.CrossEntropy2d(x, lbl)
+        else:
+            x = nn.functional.interpolate(x, size=(h, w), mode='bilinear', align_corners=True)
+            x = torch.sigmoid(x)
+            x = x.squeeze(1)  # Change shape from [B, 1, H, W] to [B, H, W]
+            print(x.size())
+           # print(lbl.size())
 
         return x
 
