@@ -12,8 +12,10 @@ import torch
 from torch.autograd import Variable
 from utils import FDA_source_to_target
 import scipy.io as sio
+#[115.32586547  86.40369579  76.0615476 ] blender
+IMG_MEAN = np.array((115.11354771,  86.17001789, 76.51190912), dtype=np.float32)#blender values
 
-IMG_MEAN = np.array((59.11354771,  65.17001789, 46.51190912), dtype=np.float32)#target values
+#IMG_MEAN = np.array((59.11354771,  65.17001789, 46.51190912), dtype=np.float32)#target values
 IMG_MEAN = torch.reshape( torch.from_numpy(IMG_MEAN), (1,3,1,1)  )
 CS_weights = np.array( (1.0, 1.0), dtype=np.float32 )
 CS_weights = torch.from_numpy(CS_weights)
@@ -37,8 +39,7 @@ def main():
     model, optimizer = CreateModel(args)
 
     start_iter = 0
-    if args.restore_from is not None:
-        start_iter = int(args.restore_from.rsplit('/', 1)[1].rsplit('_')[1])
+
 
     cudnn.enabled = True
     cudnn.benchmark = True
