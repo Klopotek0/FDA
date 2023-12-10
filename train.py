@@ -12,7 +12,6 @@ import torch
 from torch.autograd import Variable
 from utils import FDA_source_to_target
 import scipy.io as sio
-#[115.32586547  86.40369579  76.0615476 ] blender
 IMG_MEAN = np.array((115.11354771,  86.17001789, 76.51190912), dtype=np.float32)#blender values
 
 #IMG_MEAN = np.array((59.11354771,  65.17001789, 46.51190912), dtype=np.float32)#target values

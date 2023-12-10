@@ -1,7 +1,7 @@
 import numpy as np
 from torch.utils import data
-from data.gta5_dataset_source import GTA5DataSet1  #######
-from data.gta5_dataset import GTA5DataSet ###########3
+from data.gta5_dataset_source import GTA5DataSet  #######
+#from data.gta5_dataset import GTA5DataSet ###########3
 
 from data.cityscapes_dataset import cityscapesDataSet
 from data.cityscapes_dataset_label import cityscapesDataSetLabel
@@ -14,7 +14,7 @@ cs_size_test = {'target': (416,320)}
 
 def CreateSrcDataLoader(args):
     if args.source == 'soruce_images':
-        source_dataset = GTA5DataSet1( args.data_dir, args.train_list, crop_size=image_sizes['target'],  ###########
+        source_dataset = GTA5DataSet( args.data_dir, args.train_list, crop_size=image_sizes['target'],  ###########
                                       resize=image_sizes['soruce_images'] ,mean=IMG_MEAN,
                                       max_iters=args.num_steps * args.batch_size )
     elif args.source == 'synthia':
@@ -31,7 +31,7 @@ def CreateSrcDataLoader(args):
                                          pin_memory=True )    
     return source_dataloader
 
-def CreateValDataLoader(args):
+#def CreateValDataLoader(args):
     if args.source == 'soruce_images':
         val_dataset = GTA5DataSet( args.data_dir, args.val_list, crop_size=image_sizes['target'], ##
                                       resize=image_sizes['soruce_images'] ,mean=IMG_MEAN,

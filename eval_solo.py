@@ -40,7 +40,6 @@ def compute_mIoU(list_target,gt_dir, pred_dir, devkit_dir='', restore_from=''):
    # with open(os.path.join(devkit_dir, 'info.json'), 'r') as fp:
     #    info = json.load(fp)
 
-    # Zaktualizuj liczbę klas do 2
     num_classes = 2
     print('Num classes', num_classes)
 
@@ -94,21 +93,10 @@ def main():
     model1.eval()
     model1.cuda()
 
-   # args.restore_from = args.restore_opt2
-   # model2 = CreateModel(args)
-   # model2.eval()
-   # model2.cuda()
-
-    #args.restore_from = args.restore_opt3
-   # model3 = CreateModel(args)
-   # model3.eval()
-   # model3.cuda()
-
     targetloader = CreateTrgDataLoader(args)
 
-    IMG_MEAN = np.array((98.77694003,  74.15956312, 65.00406046), dtype=np.float32)#source values, treningowe
-
-    # change the mean for different dataset other than CS
+    #IMG_MEAN = np.array((98.77694003,  74.15956312, 65.00406046), dtype=np.float32)#source values, treningowe
+    #IMG_MEAN = np.array((115.11354771,  86.17001789, 76.51190912), dtype=np.float32)#target blender
     #IMG_MEAN = np.array((59.11354771,  65.17001789, 46.51190912), dtype=np.float32)#target values, noisyBlurry
     IMG_MEAN = torch.reshape( torch.from_numpy(IMG_MEAN), (1,3,1,1)  )
     mean_img = torch.zeros(1, 1)
@@ -130,18 +118,8 @@ def main():
             # forward
             output1 = model1(image)
             output1 = nn.functional.softmax(output1, dim=1)
-
-            #output2 = model2(image)
-            #output2 = nn.functional.softmax(output2, dim=1)
-
-            #output3 = model3(image)
-            #output3 = nn.functional.softmax(output3, dim=1)
-
-            a, b = 0.3333, 0.3333
-           # output = a*output1 + b*output2 + (1.0-a-b)*output3
             output=output1
             output = nn.functional.interpolate(output, (320, 416), mode='bilinear', align_corners=True).cpu().data[0].numpy()
-            #output = nn.functional.upsample(   output, (1024, 2048), mode='bilinear', align_corners=True).cpu().data[0].numpy()
             output = output.transpose(1,2,0)
 
             output_nomask = np.asarray( np.argmax(output, axis=2), dtype=np.uint8 )
