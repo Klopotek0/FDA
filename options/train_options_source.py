@@ -5,21 +5,11 @@ class TrainOptions():
     def initialize(self):
         parser = argparse.ArgumentParser( description="training script for FDA" )
         parser.add_argument("--model", type=str, default='DeepLab', help="available options : DeepLab and VGG")
-        parser.add_argument("--LB", type=float, default=0.1, help="beta for FDA")
-        parser.add_argument("--GPU", type=str, default='0', help="which GPU to use")
-        parser.add_argument("--entW", type=float, default=0.005, help="weight for entropy")
-        parser.add_argument("--ita", type=float, default=2.0, help="ita for robust entropy")
-        parser.add_argument("--switch2entropy", type=int, default=50000, help="switch to entropy after this many steps")
-
-        parser.add_argument("--source", type=str, default='soruce_images', help="source dataset : gta5 or synthia")
-        parser.add_argument("--target", type=str, default='target', help="target dataset : cityscapes")
-        parser.add_argument("--snapshot-dir", type=str, default='../checkpoints/FDA', help="Where to save snapshots of the model.")
+        parser.add_argument("--source", type=str, default='soruce_images', help="source dataset")
+        parser.add_argument("--snapshot-dir", type=str, default='../checkpoints/', help="Where to save snapshots of the model.")
         parser.add_argument("--data-dir", type=str, default='/content/FDA/data_robust', help="Path to the directory containing the source dataset.")
         parser.add_argument("--train-list", type=str, default='/content/FDA/dataset/source_list/train.txt', help="Path to the listing of images in the source dataset.")
-        parser.add_argument("--val-list", type=str, default='/content/FDA/dataset/source_list/val.txt', help="Path to the listing of images in the source dataset.")
 
-       # parser.add_argument("--data-dir-target", type=str, default='/content/FDA/data_robust', help="Path to the directory containing the target dataset.")
-      #  parser.add_argument("--data-list-target", type=str, default='/content/FDA/dataset/target_list/train.txt', help="list of images in the target dataset.")
         parser.add_argument("--set", type=str, default='train', help="choose adaptation set.")
         parser.add_argument("--label-folder", type=str, default=None, help="Path to the directory containing the pseudo labels.")
 
@@ -38,8 +28,6 @@ class TrainOptions():
 
         parser.add_argument("--save-pred-every", type=int, default=500, help="Save summaries and checkpoint every often.")
         parser.add_argument("--print-freq", type=int, default=100, help="print loss and time fequency.")
-        parser.add_argument("--validation-freq", type=int, default=200, help="print loss and time fequency.")
-
         parser.add_argument("--matname", type=str, default='loss_log.mat', help="mat name to save loss")
         parser.add_argument("--tempdata", type=str, default='tempdata.mat', help="mat name to save data")
 
